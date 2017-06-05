@@ -15,6 +15,13 @@ Aspects of project: Background analysis
 BG analysis: 
 
 
+<<<<<<< HEAD
+=======
+http://www.happyponyland.net/camogen.php?about
+>>>>>>> 37c130c0a08bef964084f37cd1110ae03651701b
+
+
 Genetic algorithm examples in python
 
 https://lethain.com/genetic-algorithms-cool-name-damn-simple/
+
