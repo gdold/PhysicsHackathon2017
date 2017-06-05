@@ -34,8 +34,8 @@ def fitness(individual, target):
     target: the target number individuals are aiming for
     """
     
-    sum = sum(individual)
-    return abs(target-sum)
+    sumf = sum(individual)
+    return abs(target-sumf)
 
 def grade(pop, target):
     """
@@ -81,3 +81,19 @@ def evolve(pop, target, retain=0.2, random_select=0.05, mutate=0.01):
             children.append(child)        
     parents.extend(children)
     return parents
+
+if __name__ == '__main__':
+    import numpy as np
+    imgin = [randint(0,255) for i in range(0,10)]
+    target = np.mean(imgin)
+    p_count = 100
+    i_length = len(imgin)
+    i_min = min(imgin)
+    i_max = max(imgin)
+    p = population(p_count, i_length, i_min, i_max)
+    fitness_history = [grade(p, target),]
+    for i in xrange(p_count):
+        p = evolve(p, target)
+        fitness_history.append(grade(p, target))
+    print p
+    
