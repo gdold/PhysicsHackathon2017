@@ -29,7 +29,7 @@ def population(count, length, min, max):
 
 def fitness(indiv, target):
     """
-    Determine the fitness of an individual. Higher is better.
+    Determine the fitness of an individual.
 
     individual: the individual to evaluate
     target: the target number individuals are aiming for
@@ -38,8 +38,11 @@ def fitness(indiv, target):
     r_in = np.argmax(np.bincount(indiv[:,0]))
     b_in = np.argmax(np.bincount(indiv[:,1]))
     g_in = np.argmax(np.bincount(indiv[:,2]))
+    
+    # difference to dominant rgb color
+    rgb_diff =  np.sqrt(((r_in - target[0])**2 + (b_in - target[1])**2 + (g_in - target[2])**2)/3.0)
 
-    return np.sqrt(((r_in - target[0])**2 + (b_in - target[1])**2 + (g_in - target[2])**2)/3.0)
+    return sum([rgb_diff])
 
 def grade(pop, target):
     """
@@ -108,8 +111,8 @@ if __name__ == '__main__':
         p = evolve(p, target)
         fitness_history.append(grade(p, target))
     
-    for i in fitness_history:
-        print i
+    for cost in fitness_history:
+        print cost
     
     p = p[0]
     index_out = (np.argmax(np.bincount(p[:,0])), 
