@@ -38,13 +38,16 @@ def fitness(individual, target):
     return abs(target-sum)
 
 def grade(pop, target):
-    'Find average fitness for a population.'
+    """
+    Find average fitness for a population.
+    """
 
-    summed = [sum(x) for x in pop]
+    summed = sum(sum(x) for x in pop)
     return summed / (float(len(pop)))
 
 def evolve(pop, target, retain=0.2, random_select=0.05, mutate=0.01):
     graded = [ (fitness(x, target), x) for x in pop]
+    # sorted() increasing per default
     graded = [ x[1] for x in sorted(graded)]
     retain_length = int(len(graded)*retain)
     parents = graded[:retain_length]
