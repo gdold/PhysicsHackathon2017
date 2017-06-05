@@ -13,3 +13,8 @@ Aspects of project: Background analysis
 
 
 BG analysis: 
+
+
+Genetic algorithm examples in python
+
+https://lethain.com/genetic-algorithms-cool-name-damn-simple/
