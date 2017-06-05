@@ -16,12 +16,19 @@ def main():
 
 
     background_pixels=np.ones((til.size[0],til.size[1],3))
+    red=[]        #red, green and blue are the three vectors with the rgb values for
+    green=[]      #the background
+    blue=[]
     for i in range(til.size[0]):
         for j in range(til.size[1]):
                 r,g,b=til.getpixel((i, j))
                 background_pixels[i,j,0]=r
+                red.append(r)
                 background_pixels[i,j,1]=g
+                green.append(g)
                 background_pixels[i,j,2]=b
+                blue.append(b)
+    
 
     size1=background_pixels.shape[0]   #image length in pixels
     size2=background_pixels.shape[1]   #image width in pixels
@@ -29,8 +36,6 @@ def main():
 
     background=background_pixels.reshape(1,size1*size2*size3)
     background=background[0]
-    print type(background)
-    print np.size(background)
     #!!!!!! this is the vector that contains the data about the background image
 
     #this creates a randomly coloured square
@@ -45,12 +50,18 @@ def main():
 
     pixels = im.load()
     foreground_pixels=np.ones((im.size[0],im.size[1],3))
+    red_target=[]        #red, green and blue are the three vectors with the rgb values for
+    green_target=[]      #the foreground
+    blue_target=[]
     for i in range(im.size[0]):
         for j in range(im.size[1]):
                 r,g,b=til.getpixel((i, j))
                 foreground_pixels[i,j,0]=r
+                red_target.append(r)
                 foreground_pixels[i,j,1]=g
+                green_target.append(g)
                 foreground_pixels[i,j,2]=b
+                blue_target.append(b)
 
     size2=foreground_pixels.shape[1]   #image width in pixels
     size1=foreground_pixels.shape[0]   #image length in pixels
@@ -65,8 +76,14 @@ def main():
     pos2=int(til.size[1]/4)
     til.paste(im,(pos1,pos2))
     plt.imshow(til)
+    
+    
+    
+    
 
 if __name__ == "__main__":
     main()
+    
+    
 
 
