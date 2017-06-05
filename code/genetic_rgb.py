@@ -6,13 +6,14 @@ called from main.py
 
 from random import randint, random
 from operator import add
+import numpy as np
 
 def individual(length, min, max):
     """
     Create a member of the population from foreground 
     image selection flattened to a vector
     """
-    return [ randint(min,max) for x in xrange(length) ]
+    return np.random.random_integers(min, max, (length, 3))
 
 def population(count, length, min, max):
     """
@@ -26,7 +27,7 @@ def population(count, length, min, max):
 
     return [ individual(length, min, max) for x in xrange(count) ]
 
-def fitness(individual, target):
+def fitness(indiv, target):
     """
     Determine the fitness of an individual. Higher is better.
 
@@ -34,21 +35,24 @@ def fitness(individual, target):
     target: the target number individuals are aiming for
     """
     
-    sumf = sum(individual)
-    return abs(target-sumf)
+    r_in = np.argmax(np.bincount(indiv[:,0]))
+    b_in = np.argmax(np.bincount(indiv[:,1]))
+    g_in = np.argmax(np.bincount(indiv[:,2]))
+
+    return np.sqrt(((r_in - target[0])**2 + (b_in - target[1])**2 + (g_in - target[2])**2)/3.0)
 
 def grade(pop, target):
     """
     Find average fitness for a population.
     """
 
-    summed = sum([sum(x) for x in pop])
+    summed = sum([fitness(i, target) for i in pop])
     return summed / (float(len(pop)))
 
 def evolve(pop, target, retain=0.2, random_select=0.05, mutate=0.01):
     graded = [ (fitness(x, target), x) for x in pop]
     # sorted() increasing per default
-    graded = [ x[1] for x in sorted(graded)]
+    graded = [x[1] for x in sorted(graded, key=lambda x: x[0])]
     retain_length = int(len(graded)*retain)
     parents = graded[:retain_length]
     # randomly add other individuals to
@@ -64,8 +68,12 @@ def evolve(pop, target, retain=0.2, random_select=0.05, mutate=0.01):
             # restricts the range of possible values,
             # but the function is unaware of the min/max
             # values used to create the individuals,
-            individual[pos_to_mutate] = randint(
-                min(individual), max(individual))
+            #print pos_to_mutate
+
+            individual[pos_to_mutate] = np.array([randint(min(individual[:,0]), max(individual[:,0])), 
+                                        randint(min(individual[:,1]), max(individual[:,1])), 
+                                        randint(min(individual[:,2]), max(individual[:,2]))])
+        
     # crossover parents to create children
     parents_length = len(parents)
     desired_length = len(pop) - parents_length
@@ -77,7 +85,7 @@ def evolve(pop, target, retain=0.2, random_select=0.05, mutate=0.01):
             male = parents[male]
             female = parents[female]
             half = len(male) / 2
-            child = male[:half] + female[half:]
+            child = np.vstack((male[:half], female[half:]))
             children.append(child)        
     parents.extend(children)
     return parents
@@ -85,21 +93,29 @@ def evolve(pop, target, retain=0.2, random_select=0.05, mutate=0.01):
 if __name__ == '__main__':
     import numpy as np
     imgin = [randint(0,255) for i in range(0,10)]
-    target = 220
+    target = (220, 10, 145)
     p_count = 100
-    i_length = len(imgin)
+    i_length = 50
     i_min = 0
     i_max = 255
     p = population(p_count, i_length, i_min, i_max)
     fitness_history = [grade(p, target),]
-    retain = 0.1
-    random_select = 0.05
-    mutate = 0.01
-    p_iter = 200
+    retain = 0.2
+    random_select = 0.1
+    mutate = 0.008
+    p_iter = 1000
     for i in xrange(p_iter):
         p = evolve(p, target)
         fitness_history.append(grade(p, target))
     
     for i in fitness_history:
         print i
+    
+    p = p[0]
+    index_out = (np.argmax(np.bincount(p[:,0])), 
+                 np.argmax(np.bincount(p[:,1])),
+                 np.argmax(np.bincount(p[:,2])))
+    print target
+    print index_out
+
     
