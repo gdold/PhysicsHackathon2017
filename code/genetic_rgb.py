@@ -97,8 +97,8 @@ if __name__ == '__main__':
     import numpy as np
     imgin = [randint(0,255) for i in range(0,10)]
     target = (220, 10, 145)
-    p_count = 100
-    i_length = 50
+    p_count = 200
+    i_length = 100
     i_min = 0
     i_max = 255
     p = population(p_count, i_length, i_min, i_max)
@@ -106,7 +106,7 @@ if __name__ == '__main__':
     retain = 0.2
     random_select = 0.1
     mutate = 0.008
-    p_iter = 1000
+    p_iter = 500
     for i in xrange(p_iter):
         p = evolve(p, target)
         fitness_history.append(grade(p, target))
