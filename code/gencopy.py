@@ -91,17 +91,17 @@ if __name__ == '__main__':
     from colorthief import ColorThief
     img = ColorThief('frog.jpeg')
     palette = img.get_palette(color_count=2)
-    target = palette[1]
-    p_count = 200
+    target = palette[0]
+    p_count = 1000
     i_length = 3
     i_min = 0
     i_max = 255
     p = population(p_count, i_length, i_min, i_max)
     fitness_history = [grade(p, target),]
-    retain = 0.4
+    retain = 0.3
     random_select = 0.1
     mutate = 0.02
-    p_iter = 200
+    p_iter = 500
     for i in xrange(p_iter):
         p = evolve(p, target)
         fitness_history.append([grade(p, target),p[1]])
