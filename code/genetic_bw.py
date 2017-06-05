@@ -42,7 +42,7 @@ def grade(pop, target):
     Find average fitness for a population.
     """
 
-    summed = sum(sum(x) for x in pop)
+    summed = sum([sum(x) for x in pop])
     return summed / (float(len(pop)))
 
 def evolve(pop, target, retain=0.2, random_select=0.05, mutate=0.01):
@@ -85,15 +85,21 @@ def evolve(pop, target, retain=0.2, random_select=0.05, mutate=0.01):
 if __name__ == '__main__':
     import numpy as np
     imgin = [randint(0,255) for i in range(0,10)]
-    target = np.mean(imgin)
+    target = 220
     p_count = 100
     i_length = len(imgin)
-    i_min = min(imgin)
-    i_max = max(imgin)
+    i_min = 0
+    i_max = 255
     p = population(p_count, i_length, i_min, i_max)
     fitness_history = [grade(p, target),]
-    for i in xrange(p_count):
+    retain = 0.1
+    random_select = 0.05
+    mutate = 0.01
+    p_iter = 200
+    for i in xrange(p_iter):
         p = evolve(p, target)
         fitness_history.append(grade(p, target))
-    print p
+    
+    for i in fitness_history:
+        print i
     
