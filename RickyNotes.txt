@@ -1,0 +1,15 @@
+Attritbues of camouflage:
+
+Colour(s), 
+Shape of "blobs"/disruption
+Contrast
+
+RGB colour analysis
+
+Aspects of project: Background analysis
+			Metrics of camouflage
+			Actual Genetic Algorithm
+			Demo/Visual demo thing/libraries
+
+
+BG analysis: 
