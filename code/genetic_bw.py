@@ -10,9 +10,8 @@ from operator import add
 def individual(length, min, max):
     """
     Create a member of the population from foreground 
-    image selection
+    image selection flattened to a vector
     """
-    i
     return [ randint(min,max) for x in xrange(length) ]
 
 def population(count, length, min, max):
@@ -23,8 +22,8 @@ def population(count, length, min, max):
     length: the number of values per individual
     min: the minimum possible value in an individual's list of values
     max: the maximum possible value in an individual's list of values
-
     """
+
     return [ individual(length, min, max) for x in xrange(count) ]
 
 def fitness(individual, target):
@@ -34,13 +33,15 @@ def fitness(individual, target):
     individual: the individual to evaluate
     target: the target number individuals are aiming for
     """
-    sum = reduce(add, individual, 0)
+    
+    sum = sum(individual)
     return abs(target-sum)
 
 def grade(pop, target):
     'Find average fitness for a population.'
-    summed = reduce(add, (fitness(x, target) for x in pop))
-    return summed / (len(pop) * 1.0)
+
+    summed = [sum(x) for x in pop]
+    return summed / (float(len(pop)))
 
 def evolve(pop, target, retain=0.2, random_select=0.05, mutate=0.01):
     graded = [ (fitness(x, target), x) for x in pop]
