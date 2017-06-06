@@ -11,8 +11,8 @@ import cv2
 from PIL import Image, ImageDraw
 from colorthief import ColorThief
 
-pilimg = Image.open('balloon.jpg')
-rect = (900,200,800,750) #x,y cords of top left corner, w,h
+#pilimg = Image.open('balloon.jpg')
+#rect = (900,200,800,750) #x,y cords of top left corner, w,h
 
 def removeForeground(image,rect,transparent=True):
     '''
