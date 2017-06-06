@@ -123,7 +123,8 @@ def main():
             colour3=blue_output[i,j]
             pixels[i,j] = (int(colour1),int(colour2),int(colour3))
             #print(pixels[i,j])
-    
+    print np.shape(im)
+    print type(im)
     til.paste(im,(pos1,pos2))
     plt.imshow(til)
 

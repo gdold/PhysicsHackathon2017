@@ -41,6 +41,8 @@ def fitness(indiv, target):
     
     # difference to dominant rgb color
     rgb_diff =  np.sqrt(((r_in - target[0])**2 + (b_in - target[1])**2 + (g_in - target[2])**2)/3.0)
+    
+    # sqrt(re^2 + img^2)
 
     return sum([rgb_diff])
 
