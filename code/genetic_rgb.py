@@ -1,8 +1,6 @@
 """
 Module that contains functions for genetic algorithm functionality 
 called from main.py
-
-Original sourced from https://lethain.com/genetic-algorithms-cool-name-damn-simple/
 """
 
 
@@ -29,12 +27,12 @@ def population(count, length, min, max):
 
     return [ individual(length, min, max) for x in xrange(count) ]
 
-def fitness(indiv, target):
+def fitness(indiv, target_rgb, target_var, popsize):
     """
     Determine the fitness of an individual.
 
     individual: the individual to evaluate
-    target: the target number individuals are aiming for2-dimen2-dimen
+    target: the target number individuals are aiming for
     """
     
     r_in = np.argmax(np.bincount(indiv[:,0]))
@@ -42,22 +40,29 @@ def fitness(indiv, target):
     g_in = np.argmax(np.bincount(indiv[:,2]))
     
     # difference to dominant rgb color
-    rgb_diff =  np.sqrt(((r_in - target[0])**2 + (b_in - target[1])**2 + (g_in - target[2])**2)/3.0)
-    
-    # sqrt(re^2 + img^2)
+    rgb_diff =  np.sqrt(((r_in - target_rgb[0])**2 + (b_in - target_rgb[1])**2 + (g_in - target_rgb[2])**2)/3.0)
+    # normalise
 
-    return sum([rgb_diff])
+    r_var = np.var(indiv[:,0])
+    g_var = np.var(indiv[:,1])
+    b_var = np.var(indiv[:,2])
 
-def grade(pop, target):
+    var_diff = np.sqrt(((r_var - target_var[0])**2 + (b_var - target_var[1])**2 + (g_var - target_var[2])**2)/3.0)
+    # normalize variance feature
+    var_diff = var_diff/float(popsize)
+
+    return sum([rgb_diff, var_diff])
+
+def grade(pop, target_rgb, target_var):
     """
     Find average fitness for a population.
     """
 
-    summed = sum([fitness(i, target) for i in pop])
+    summed = sum([fitness(i, target_rgb, target_var, len(pop)) for i in pop])
     return summed / (float(len(pop)))
 
-def evolve(pop, target, retain=0.2, random_select=0.05, mutate=0.01):
-    graded = [ (fitness(x, target), x) for x in pop]
+def evolve(pop, target_rgb, target_var, retain=0.2, random_select=0.05, mutate=0.01):
+    graded = [ (fitness(x, target_rgb, target_var, len(pop)), x) for x in pop]
     # sorted() increasing per default
     graded = [x[1] for x in sorted(graded, key=lambda x: x[0])]
     retain_length = int(len(graded)*retain)

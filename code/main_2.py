@@ -10,7 +10,7 @@ def main():
     bg = Image.open("jungle.jpeg")
     
     # size of square window to be overlaid and camouflaged
-    fg_win = 200
+    fg_win = 100
     # where to place the foreground
     fg_anchor = (100, 100)
     
@@ -23,12 +23,19 @@ def main():
     fg_green = fg[:,:,1]
     fg_blue = fg[:,:,2]
 
-    # create target for color 
+    # create target for dominant color 
     t_r = np.argmax(np.bincount(fg_red[:,0]))
     t_g = np.argmax(np.bincount(fg_green[:, 0]))
     t_b = np.argmax(np.bincount(fg_blue[:, 0]))
     target_rgb = (t_r, t_g, t_b)
+
+    # target for variance
+    t_v_r = np.var(fg_red)
+    t_v_g = np.var(fg_green)
+    t_v_b = np.var(fg_blue)
+    target_var = (t_v_r, t_v_g, t_v_b)
     
+
     # population size
     p_count = 200
     # chromosome length
@@ -37,7 +44,7 @@ def main():
     i_max = 255
     p = gen.population(p_count, i_length, i_min, i_max)
     
-    fitness_history = [gen.grade(p, target_rgb),]
+    fitness_history = [gen.grade(p, target_rgb, target_var),]
     
     # genetic algorithm parameters
     retain = 0.2
@@ -46,15 +53,16 @@ def main():
     p_iter = 200 # 500
 
     for i in xrange(p_iter):
-        p = gen.evolve(p, target_rgb)
-        fitness_history.append(gen.grade(p, target_rgb))
-        
+        p = gen.evolve(p, target_rgb, target_var)
+        fitness_history.append(gen.grade(p, target_rgb, target_var))
+    
+    for cost in fitness_history:
+        print cost
+
     p = p[0]
     index_out = (np.argmax(np.bincount(p[:,0])), 
                  np.argmax(np.bincount(p[:,1])),
                  np.argmax(np.bincount(p[:,2])))
-    print target_rgb
-    print index_out
 
     # reconstruct foreground from generated image
     fg_camou_r = p[:,0].reshape(fg_win, fg_win)
