@@ -11,8 +11,8 @@ import cv2
 from PIL import Image, ImageDraw
 from colorthief import ColorThief
 
-#pilimg = Image.open('dog.jpg')
-#rect = (100,20,450,1000) #x,y cords of top left corner, w,h
+pilimg = Image.open('balloon.jpg')
+rect = (900,200,800,750) #x,y cords of top left corner, w,h
 
 def removeForeground(image,rect,transparent=True):
     '''
@@ -49,12 +49,19 @@ def removeForeground(image,rect,transparent=True):
     
     return outputimg
 
-def getBackgroundPalette(image,rect,color_count=5,transparent=True):
+def getBackgroundPalette(image,rect=None,color_count=5,transparent=True):
     '''
     Return the background palette from the PIL image 'image', with the
     foreground object specified by 'rect' removed
+    
+    If no rect specified, gets palette of entire image with foreground
+    
+    'rect' - define dimensions as (x,y,w,h) where x,y are coords of top left corner
     '''
-    img = ColorThief(removeForeground(image,rect,transparent))
+    if rect:
+        img = ColorThief(removeForeground(image,rect,transparent))
+    else:
+        img = ColorThief(image)
     palette = img.get_palette(color_count=5)
     return palette
 
