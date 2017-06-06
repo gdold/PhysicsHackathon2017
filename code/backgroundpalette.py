@@ -11,8 +11,8 @@ import cv2
 from PIL import Image, ImageDraw
 from colorthief import ColorThief
 
-pilimg = Image.open('dog.jpg')
-rect = (100,20,550,1000) #x,y cords of top left corner, w,h
+#pilimg = Image.open('dog.jpg')
+#rect = (100,20,450,1000) #x,y cords of top left corner, w,h
 
 def removeForeground(image,rect,transparent=True):
     '''
@@ -60,7 +60,6 @@ def getBackgroundPalette(image,rect,color_count=5,transparent=True):
 
 def visualiseRectangle(image,rect):
     rect_xyxy = [rect[0],rect[1],rect[0]+rect[2],rect[1]+rect[3]]
-    rect_xyxy=rect
     draw = ImageDraw.Draw(image)
     draw.rectangle(rect_xyxy,fill=None,outline='#ff0000')
     image.show()
