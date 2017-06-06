@@ -1,6 +1,8 @@
 """
 Module that contains functions for genetic algorithm functionality 
 called from main.py
+
+Original sourced from https://lethain.com/genetic-algorithms-cool-name-damn-simple/
 """
 
 
