@@ -13,7 +13,14 @@ def individual(length, min, max):
     Create a member of the population from foreground 
     image selection flattened to a vector
     """
+    #red = np.random.random_integers(min[0], max[0], (length, 1))
+    #green = np.random.random_integers(min[1], max[1], (length, 1))
+    #blue = np.random.random_integers(min[2], max[2], (length, 1))
+
+    #return np.hstack((red, green, blue))
+    
     return np.random.random_integers(min, max, (length, 3))
+
 
 def population(count, length, min, max):
     """
@@ -27,7 +34,7 @@ def population(count, length, min, max):
 
     return [ individual(length, min, max) for x in xrange(count) ]
 
-def fitness(indiv, target_rgb, target_var, popsize):
+def fitness(indiv, target_rgb, target_var, target_min, target_max, popsize):
     """
     Determine the fitness of an individual.
 
@@ -42,6 +49,7 @@ def fitness(indiv, target_rgb, target_var, popsize):
     # difference to dominant rgb color
     rgb_diff =  np.sqrt(((r_in - target_rgb[0])**2 + (b_in - target_rgb[1])**2 + (g_in - target_rgb[2])**2)/3.0)
     # normalise
+    rgb_diff = rgb_diff*2
 
     r_var = np.var(indiv[:,0])
     g_var = np.var(indiv[:,1])
@@ -49,20 +57,29 @@ def fitness(indiv, target_rgb, target_var, popsize):
 
     var_diff = np.sqrt(((r_var - target_var[0])**2 + (b_var - target_var[1])**2 + (g_var - target_var[2])**2)/3.0)
     # normalize variance feature
-    var_diff = var_diff/float(popsize)
+    var_diff = var_diff/float(2*popsize)
 
-    return sum([rgb_diff, var_diff])
+    std_rgb = (np.std(indiv[:,0]), np.std(indiv[:,1]), np.std(indiv[:,2]))
+    mean_rgb = (np.mean(indiv[:,0]), np.mean(indiv[:,1]), np.mean(indiv[:,2]))
 
-def grade(pop, target_rgb, target_var):
+    spread_rgb = (mean_rgb[0] + std_rgb[0], mean_rgb[1] + std_rgb[1], mean_rgb[2] + std_rgb[2],
+                  mean_rgb[0] - std_rgb[0], mean_rgb[1] - std_rgb[1], mean_rgb[2] + std_rgb[2])
+
+    rgb_max = np.sqrt(((spread_rgb[0] - target_max[0])**2 + (spread_rgb[1] - target_max[1])**2 + (spread_rgb[2] - target_max[2])**2)/3.0)
+    rgb_min = np.sqrt(((spread_rgb[3] - target_min[0])**2 + (spread_rgb[4] - target_min[1])**2 + (spread_rgb[5] - target_min[2])**2)/3.0)
+    
+    return sum([rgb_diff, var_diff, rgb_max, rgb_min])
+
+def grade(pop, target_rgb, target_var, target_min, target_max):
     """
     Find average fitness for a population.
     """
 
-    summed = sum([fitness(i, target_rgb, target_var, len(pop)) for i in pop])
+    summed = sum([fitness(i, target_rgb, target_var, target_min, target_max, len(pop)) for i in pop])
     return summed / (float(len(pop)))
 
-def evolve(pop, target_rgb, target_var, retain=0.2, random_select=0.05, mutate=0.01):
-    graded = [ (fitness(x, target_rgb, target_var, len(pop)), x) for x in pop]
+def evolve(pop, target_rgb, target_var, target_min, target_max, retain=0.2, random_select=0.05, mutate=0.01):
+    graded = [ (fitness(x, target_rgb, target_var, target_min, target_max, len(pop)), x) for x in pop]
     # sorted() increasing per default
     graded = [x[1] for x in sorted(graded, key=lambda x: x[0])]
     retain_length = int(len(graded)*retain)
