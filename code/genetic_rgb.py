@@ -1,6 +1,8 @@
 """
 Module that contains functions for genetic algorithm functionality 
 called from main.py
+
+Original sourced from https://lethain.com/genetic-algorithms-cool-name-damn-simple/
 """
 
 
@@ -32,7 +34,7 @@ def fitness(indiv, target):
     Determine the fitness of an individual.
 
     individual: the individual to evaluate
-    target: the target number individuals are aiming for
+    target: the target number individuals are aiming for2-dimen2-dimen
     """
     
     r_in = np.argmax(np.bincount(indiv[:,0]))
