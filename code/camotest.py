@@ -40,7 +40,17 @@ im2 = im.crop(
 im2.save("temp.png")
 
 img = ColorThief("temp.png")
-palette = img.get_palette(color_count=5)		
+palette = img.get_palette(color_count=5)                
+
+image_file = Image.open("temp.png") # open colour image
+image_file = image_file.convert('1') # convert image to black and white
+image_file.save('b_w.png')
+
+if(float(xmax-xmin) > float(ymax-ymin)):
+        scale = (xmax-xmin)/10
+else:
+        scale = (ymax-ymin)/10
+
 
 def make_bezier(xys):
     # xys should be a sequence of 2-tuples (Bezier control points)
@@ -195,32 +205,43 @@ def rot_ellipse(x,y,scale,colour):
 	draw.polygon(points, fill = colour)
 	return None
 
+counter = 1
+file=open('solutions.dat','r')
+for item in file:
+        im = Image.open("desert.jpg")
+        draw = ImageDraw.Draw(im)
+        p1,p2,p3,p4,p5,p6,p7,p8,p9,p10 = item.split()
+        p1=int(p1)      
+        p2=int(p2)      
+        p3=int(p3)      
+        p4=int(p4)      
+        p5=int(p5)      
+        p6=int(p6)      
+        p7=int(p7)      
+        p8=int(p8)      
+        p9=int(p9)      
+        p10=int(p10)    
+        for x in range(0,250):
+                x1 = randint(xmin,xmax)
+                y1 = randint(ymin,ymax)
+                x2 = randint(xmin,xmax)
+                y2 = randint(ymin,ymax)
+                x3 = randint(xmin,xmax)
+                y3 = randint(ymin,ymax)
+                colour = (p1,p2,p3)
+                colour2 = (p4,p5,p6)
+                colour3 = (p7,p8,p9)
+                rot_ellipse(x1,y1,p10,colour)
+                if(randint(1,2)>1):
+                        rot_ellipse(x2,y2,p10,colour2)
+                if(randint(1,4)>3):
+                        rot_ellipse(x3,y3,p10,colour3)
+        im.save('out'+str(counter)+'.png')
+        counter +=1
 
-scale2 = scale/20
-colour = palette[0]
-colour2 = palette[1]
-colour3 = palette[3]
 
-for x in range(0,250):
-	x1 = randint(xmin,xmax)
-	y1 = randint(ymin,ymax)
-	x2 = randint(xmin,xmax)
-	y2 = randint(ymin,ymax)
-	x3 = randint(xmin,xmax)
-	y3 = randint(ymin,ymax)
-#	add_poly(x1,y1,scale,colour)
-#	add_poly(x2,y2,scale2,colour2)
-#	add_poly(x3,y3,scale3,colour3)
-#	draw.ellipse((x1,y1,x1+randint(0,scale2),y1+randint(0,scale2)),colour,colour)
-#	draw.ellipse((x2,y2,x2+randint(0,scale2),y2+randint(0,scale2)),colour2,colour2)	
-#	draw.ellipse((x3,y3,x3+randint(0,scale2),y3+randint(0,scale2)),colour3,colour3)
-	rot_ellipse(x1,y1,scale2,colour)
-	if(randint(1,2)>1):
-		rot_ellipse(x2,y2,scale2,colour2)
-	if(randint(1,4)>3):
-		rot_ellipse(x3,y3,scale2,colour3)
+file.close()
 
 
-#im.save('out.png')
 
-im.show()
+
