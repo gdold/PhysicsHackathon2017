@@ -66,6 +66,7 @@ def getBackgroundPalette(image,rect=None,color_count=5,transparent=True):
     return palette
 
 def visualiseRectangle(image,rect):
+    # Doesn't seem to give the right rectangle...? Is grabCut badly documented?
     rect_xyxy = [rect[0],rect[1],rect[0]+rect[2],rect[1]+rect[3]]
     draw = ImageDraw.Draw(image)
     draw.rectangle(rect_xyxy,fill=None,outline='#ff0000')
